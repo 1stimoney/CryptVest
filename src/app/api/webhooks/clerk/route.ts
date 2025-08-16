@@ -61,15 +61,8 @@ export async function POST(req: NextRequest) {
         const email = getPrimaryEmail(u);
         const username = u.username ?? generateFallbackUsername();
 
-        const { error } = await supabase.from("profiles").upsert(
-          {
-            id: u.id,
-            email,
-            username,                      // always set (fallback if needed)
-            first_name: u.first_name ?? null,
-            last_name: u.last_name ?? null,
-          },
-          { onConflict: "id" }
+        const { error } = await supabase.from('profiles').insert(
+          { id: u.id, email, username, first_name: u.first_name ?? null, last_name: u.last_name ?? null }
         );
         if (error) throw error;
         break;
